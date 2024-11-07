@@ -29,7 +29,6 @@
                     <li>Total Area: <strong>482 Square Feets</strong></li>
                     <li>Category: <strong>${post.category}</strong></li>
                 </ul>
-<!--                <p><a href="#" class="btn btn-primary px-4 py-3">Get Details</a></p>-->
             </div>
         </div>
     </c:forEach>
