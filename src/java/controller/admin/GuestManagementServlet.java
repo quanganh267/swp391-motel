@@ -22,12 +22,8 @@ public class GuestManagementServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            List<Guest> guests = guestDAO.getAllGuests();
-            request.setAttribute("guests", guests);
-            request.getRequestDispatcher("/admin/GuestManagement.jsp").forward(request, response);
-        } catch (SQLException e) {
-            throw new ServletException("Cannot obtain guests from DB", e);
-        }
+        List<Guest> guests = guestDAO.getAllGuests();
+        request.setAttribute("guests", guests);
+        request.getRequestDispatcher("/admin/GuestManagement.jsp").forward(request, response);
     }
 } 

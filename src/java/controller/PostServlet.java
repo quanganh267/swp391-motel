@@ -19,12 +19,8 @@ public class PostServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            List<Post> posts = postDAO.getAllPosts();
-            request.setAttribute("posts", posts);
-            request.getRequestDispatcher("about.jsp").forward(request, response);
-        } catch (SQLException e) {
-            throw new ServletException("Cannot retrieve posts from DB", e);
-        }
+        List<Post> posts = postDAO.getAllPosts();
+        request.setAttribute("posts", posts);
+        request.getRequestDispatcher("about.jsp").forward(request, response);
     }
 } 

@@ -1,34 +1,34 @@
 package dal;
 
-import model.*;
+import model.RoomType;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RoomTypeDAO extends DBContext {
 
-    // Retrieve all rooms for a specific motel
-    public RoomType getRoomTypeByID(int motelId) {
+    // Retrieve a room type by ID
+    public RoomType getRoomTypeByID(int typeId) {
         String sql = "SELECT * FROM Room_Type WHERE type_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setInt(1, motelId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    RoomType roomType = new RoomType();
-                    roomType.setId(rs.getInt("type_id"));
-                    roomType.setName(rs.getString("name"));
-                    roomType.setDescription(rs.getString("description"));
-                    roomType.setMax_user(rs.getInt("Max_Guest"));
-
-                    return roomType;
-                }
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, typeId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                RoomType roomType = new RoomType();
+                roomType.setId(rs.getInt("type_id"));
+                roomType.setName(rs.getString("name"));
+                roomType.setDescription(rs.getString("description"));
+                roomType.setMax_user(rs.getInt("Max_Guest"));
+                return roomType;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getLogger(RoomTypeDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return null;
     }
 
+    // Main method for testing
     public static void main(String[] args) {
         RoomTypeDAO roomDao = new RoomTypeDAO();
         System.out.println(roomDao.getRoomTypeByID(1));

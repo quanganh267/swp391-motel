@@ -71,17 +71,13 @@ public class MotelServlet extends HttpServlet {
 protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     String motelIdStr = request.getParameter("motelID");
     if (motelIdStr != null) {
-        try {
-            int motelId = Integer.parseInt(motelIdStr);
-            Motel motel = dao.getMotelById(motelId);
-            RoomDAO roomDAO = new RoomDAO();
-            List<Room> rooms = roomDAO.searchRooms(motelId, null);
-            request.setAttribute("motel", motel);
-            request.setAttribute("rooms", rooms);
-            request.getRequestDispatcher("motelRooms.jsp").forward(request, response);
-        } catch (SQLException e) {
-            throw new ServletException(e);
-        }
+        int motelId = Integer.parseInt(motelIdStr);
+        Motel motel = dao.getMotelById(motelId);
+        RoomDAO roomDAO = new RoomDAO();
+        List<Room> rooms = roomDAO.searchRooms(motelId, null);
+        request.setAttribute("motel", motel);
+        request.setAttribute("rooms", rooms);
+        request.getRequestDispatcher("motelRooms.jsp").forward(request, response);
     } else {
         // Existing code to display all motels
         try {

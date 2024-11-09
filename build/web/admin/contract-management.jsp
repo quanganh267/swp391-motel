@@ -82,7 +82,7 @@
                             <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editContractModal${contract.id}">Edit</button>
 
                             <!-- Delete Button with Confirmation -->
-                            <form action="contract-management" method="POST" style="display:inline;" onsubmit="return confirmDelete()">
+                            <form action="/admin/contract-management" method="POST" style="display:inline;" onsubmit="return confirmDelete()">
                                 <input type="hidden" name="contractId" value="${contract.id}"/>
                                 <input type="hidden" name="action" value="delete"/>
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>

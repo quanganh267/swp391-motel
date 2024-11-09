@@ -39,11 +39,7 @@ public class ContractManagementController extends HttpServlet {
 
         if (user != null && (user.getRole().equals(Role.STAFF) || user.getRole().equals(Role.ADMIN))) {
             List<Room> rooms = null;
-            try {
-                rooms = roomDAO.getAllRooms();
-            } catch (SQLException ex) {
-                Logger.getLogger(ContractManagementController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            rooms = roomDAO.getAllRooms();
             List<User> users = userDAO.getAllUsers();
             List<Contract> contracts = contractDAO.getAllContracts();
 
@@ -65,7 +61,7 @@ public class ContractManagementController extends HttpServlet {
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("account");
 
-        if (currentUser != null && currentUser.getRole().equals(Role.STAFF)) {
+        if (currentUser != null && currentUser.getRole().equals(Role.ADMIN)) {
             String action = request.getParameter("action");
 
             if ("add".equals(action)) {
@@ -103,7 +99,7 @@ public class ContractManagementController extends HttpServlet {
         // Continue to add the contract if unique
         Room room = roomDAO.getRoomById(roomId);
         User user = userDAO.getUserById(userId);
-        Motel motel = motelDAO.getAllMotelById(motelId);
+        Motel motel = motelDAO.getMotelById(motelId);
         Contract contract = new Contract();
         contract.setMotel(motel);
         contract.setRoom(room);
@@ -172,6 +168,6 @@ private void handleEditContract(HttpServletRequest request, HttpSession session)
     private void handleDeleteContract(HttpServletRequest request, HttpSession session) {
         int contractId = Integer.parseInt(request.getParameter("contractId"));
         contractDAO.deleteContract(contractId);
-        session.setAttribute("notification", "Contract deleted successfully!");
+        session.setAttribute("notification", "Contract deleted sfgasdasrg!");
     }
 }

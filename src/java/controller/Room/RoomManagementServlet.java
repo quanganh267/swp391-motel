@@ -36,13 +36,9 @@ public class RoomManagementServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            List<Room> rooms = dao.getAllRooms(); // Lấy tất cả phòng
-            request.setAttribute("rooms", rooms); // Đặt dữ liệu phòng vào request attribute
-            request.getRequestDispatcher("/admin/RoomManagement.jsp").forward(request, response); // Forward dữ liệu tới trang RoomManagement.jsp
-        } catch (SQLException e) {
-            throw new ServletException(e);
-        }
+        List<Room> rooms = dao.getAllRooms(); // Lấy tất cả phòng
+        request.setAttribute("rooms", rooms); // Đặt dữ liệu phòng vào request attribute
+        request.getRequestDispatcher("/admin/RoomManagement.jsp").forward(request, response); // Forward dữ liệu tới trang RoomManagement.jsp
     }
 
     @Override
@@ -73,7 +69,7 @@ public class RoomManagementServlet extends HttpServlet {
                 double price = Double.parseDouble(request.getParameter("price"));
 
                 Room room = new Room(roomId, 0, typeId, imageUrl, null, null, status, price);
-                dao.EditRoom(room);
+                dao.editRoom(room);
                 response.sendRedirect(request.getContextPath() + "/admin/room-management");
 
             } else if ("changeStatus".equals(action)) {
@@ -87,9 +83,6 @@ public class RoomManagementServlet extends HttpServlet {
                 dao.deleteRoom(roomId);
                 response.sendRedirect(request.getContextPath() + "/admin/room-management");
             }
-        } catch (SQLException e) {
-          
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error occurred");
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid input data");
         }

@@ -35,7 +35,7 @@ public class SingleRoomServlet extends HttpServlet {
                 request.setAttribute("error", "Room not found!");
                 request.getRequestDispatcher("Room.jsp").forward(request, response);
             }
-        } catch (SQLException | NumberFormatException e) {
+        } catch (NumberFormatException e) {
             throw new ServletException(e);
         }
     }

@@ -30,12 +30,8 @@ public class RentServlet extends HttpServlet {
             request.setAttribute("roomID", roomId);
         }
         RoomDAO roomDAO = new RoomDAO();
-        try {
-            List<Room> rooms = roomDAO.getAllRooms();
-            request.setAttribute("rooms", rooms);
-        } catch (SQLException e) {
-            throw new ServletException("Error retrieving rent contacts", e);
-        }
+        List<Room> rooms = roomDAO.getAllRooms();
+        request.setAttribute("rooms", rooms);
         request.getRequestDispatcher("/Rent.jsp").forward(request, response);
     }
 
@@ -80,21 +76,16 @@ public class RentServlet extends HttpServlet {
                 return;
             }
 
-            try {
-                RentContact rentContact = new RentContact();
-                rentContact.setGuestName(guestName);
-                rentContact.setRoomId(roomId);
-                rentContact.setStartDate(java.sql.Date.valueOf(startDate));
-                rentContact.setEndDate(java.sql.Date.valueOf(endDate));
-                rentContact.setPhoneNumber(phoneNumber);
-                rentContact.setAddress(address);
-
-                dao.addRentContact(rentContact);
-                request.getSession().setAttribute("status", "1");
-                response.sendRedirect("Rent");
-            } catch (SQLException e) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error: " + e.getMessage());
-            }
+            RentContact rentContact = new RentContact();
+            rentContact.setGuestName(guestName);
+            rentContact.setRoomId(roomId);
+            rentContact.setStartDate(java.sql.Date.valueOf(startDate));
+            rentContact.setEndDate(java.sql.Date.valueOf(endDate));
+            rentContact.setPhoneNumber(phoneNumber);
+            rentContact.setAddress(address);
+            dao.addRentContact(rentContact);
+            request.getSession().setAttribute("status", "1");
+            response.sendRedirect("Rent");
         } catch (Exception e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid input: " + e.getMessage());
         }

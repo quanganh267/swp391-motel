@@ -4,14 +4,17 @@ import model.Post;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PostDAO extends DBContext {
 
-    public List<Post> getAllPosts() throws SQLException {
+    public List<Post> getAllPosts() {
         List<Post> posts = new ArrayList<>();
         String query = "SELECT * FROM Post";
-        try (Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery(query)) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Post post = new Post();
                 post.setPostId(rs.getInt("Post_id"));
@@ -23,6 +26,8 @@ public class PostDAO extends DBContext {
                 post.setStaffId(rs.getInt("Staff_id"));
                 posts.add(post);
             }
+        } catch (SQLException e) {
+            Logger.getLogger(PostDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return posts;
     }

@@ -38,11 +38,7 @@ public class ContractManagementController extends HttpServlet {
 
         if (user != null && user.getRole().equals(Role.STAFF)) {
             List<Room> rooms = null;
-            try {
-                rooms = roomDAO.getAllRooms();
-            } catch (SQLException ex) {
-                Logger.getLogger(ContractManagementController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            rooms = roomDAO.getAllRooms();
             List<User> users = userDAO.getAllUsers();
             List<Contract> contracts = contractDAO.getAllContracts();
 
@@ -102,7 +98,7 @@ public class ContractManagementController extends HttpServlet {
         // Continue to add the contract if unique
         Room room = roomDAO.getRoomById(roomId);
         User user = userDAO.getUserById(userId);
-        Motel motel = motelDAO.getAllMotelById(motelId);
+        Motel motel = motelDAO.getMotelById(motelId);
         Contract contract = new Contract();
         contract.setMotel(motel);
         contract.setRoom(room);

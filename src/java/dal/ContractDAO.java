@@ -7,6 +7,8 @@ import model.User;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ContractDAO extends DBContext {
 
@@ -18,13 +20,14 @@ public class ContractDAO extends DBContext {
     public List<Contract> getAllContracts() {
         List<Contract> contracts = new ArrayList<>();
         String sql = "SELECT * FROM Contract";
-        try (PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 contracts.add(mapContract(rs));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getLogger(ContractDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return contracts;
     }
@@ -67,21 +70,28 @@ public class ContractDAO extends DBContext {
     // Delete a contract
     public boolean deleteContract(int contractId) {
         String sql = "DELETE FROM Contract WHERE Contract_id = ?";
-        return executeUpdate(sql, List.of(contractId));
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, contractId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            Logger.getLogger(ContractDAO.class.getName()).log(Level.SEVERE, null, e);
+            return false;
+        }
     }
 
     // Retrieve a contract by ID
     public Contract getContractById(int contractId) {
         String sql = "SELECT * FROM Contract WHERE Contract_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, contractId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return mapContract(rs);
-                }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapContract(rs);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getLogger(ContractDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return null;
     }
@@ -97,11 +107,12 @@ public class ContractDAO extends DBContext {
     public boolean isContractUnique(int roomId, int userId, int motelId) {
         String sql = "SELECT COUNT(*) FROM Contract WHERE Room_id = ? AND User_ID = ? AND Motel_id = ?";
         List<Object> params = List.of(roomId, userId, motelId);
-        try (PreparedStatement ps = prepareStatement(sql, params);
-             ResultSet rs = ps.executeQuery()) {
+        try {
+            PreparedStatement ps = prepareStatement(sql, params);
+            ResultSet rs = ps.executeQuery();
             return rs.next() && rs.getInt(1) == 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getLogger(ContractDAO.class.getName()).log(Level.SEVERE, null, e);
             return false;
         }
     }
@@ -112,7 +123,7 @@ public class ContractDAO extends DBContext {
         contract.setId(rs.getInt("Contract_id"));
         contract.setRoom(roomDAO.getRoomById(rs.getInt("Room_id")));
         contract.setUser(userDAO.getUserById(rs.getInt("User_ID")));
-        contract.setMotel(motelDAO.getAllMotelById(rs.getInt("motel_id")));
+        contract.setMotel(motelDAO.getMotelById(rs.getInt("motel_id")));
         contract.setTotalPrice(rs.getDouble("Total_Price"));
         contract.setCreateAt(rs.getDate("CreateAt"));
         contract.setPaymentMethod(rs.getString("Payment_method"));
@@ -123,10 +134,11 @@ public class ContractDAO extends DBContext {
     }
 
     private boolean executeUpdate(String sql, List<Object> params) {
-        try (PreparedStatement ps = prepareStatement(sql, params)) {
+        try {
+            PreparedStatement ps = prepareStatement(sql, params);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            Logger.getLogger(ContractDAO.class.getName()).log(Level.SEVERE, null, e);
             return false;
         }
     }
